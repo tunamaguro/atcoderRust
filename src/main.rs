@@ -1,16 +1,25 @@
 use proconio::input;
-use std::cmp::min;
+
+// See mPn and mCn
+// https://manabitimes.jp/math/1352
+fn p(m:i128,n:i128)->i128{
+    let mut s=m;
+    for i in 1..n{
+        s*=m-i;
+    }
+    s
+}
+
+fn f(n:i128)->i128{
+    if n==0{
+        1
+    }else{
+        f(n-1)*n
+    }
+}
 
 fn main() {
-    input! {k:usize,n:usize,mut a:[usize;n]}
-    let mut ans=a.iter().max().unwrap()-a.iter().min().unwrap();
-    let mut house:Vec<_>=vec![0];
-    house.append(&mut a);
-    house.push(k);
-    for i in 1..=n{
-        let b=house[i-1];
-        let a=house[i];
-        ans=min(ans,k-(a-b))
-    }
+    input! {l:i128}
+    let ans=p(l-1,11)/f(11);
     println!("{}",ans)
 }
