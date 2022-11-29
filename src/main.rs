@@ -1,24 +1,22 @@
-use proconio::{input, marker::Chars};
+use proconio::input;
 
 fn main() {
-    input! {s:Chars,t:Chars}
-    let mut ans = "No";
-    for i in 0..s.len() {
-        let mut is_same = true;
-        for (j, _) in t.iter().enumerate() {
-            let si = i + j;
-            if si >= s.len() {
-                // tの探索範囲がsの長さを超えたらbreak
-                is_same = false;
-                break;
-            }
-            if s[si] != t[j] {
-                is_same = false
-            }
+    input! {n:usize,a:[i128;n]}
+    let c: i128 = 10_i128.pow(9) + 7;
+    let mut sum = 0;
+    for ai in &a {
+        sum += ai;
+        sum %= c;
+    }
+    let mut ans = 0;
+    for ai in a {
+        sum -= ai % c;
+        sum %= c;
+        if sum <= 0 {
+            sum += c
         }
-        if is_same {
-            ans = "Yes"
-        }
+        ans += (sum * (ai % c)) % c;
+        ans %= c;
     }
     println!("{}", ans)
 }
