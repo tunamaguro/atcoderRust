@@ -1,24 +1,29 @@
 use proconio::input;
+use std::cmp::max;
 
 fn main() {
-    input! {n:usize,m:usize}
-    let mut memo = [[false; 105]; 105];
-    for _ in 0..m {
-        input! {k:usize,x:[usize;k]}
-        for (i, x1) in x.iter().enumerate() {
-            for x2 in x.iter().skip(i) {
-                memo[*x1 - 1][*x2 - 1] = true;
-                memo[*x2 - 1][*x1 - 1] = true;
-            }
+    input! {n:usize,a:[i32;n]}
+    let mut even = vec![];
+    let mut odd = vec![];
+    for ai in a {
+        if ai % 2 == 0 {
+            even.push(ai)
+        } else {
+            odd.push(ai)
         }
     }
-    let mut ans = true;
-    for (n1, a) in memo.iter().enumerate() {
-        for n2 in a.iter().take(n).skip(n1) {
-            if !n2 {
-                ans = false
-            }
-        }
+    even.sort();
+    odd.sort();
+    even.reverse();
+    odd.reverse();
+
+    let mut ans = -1;
+
+    if even.len() >= 2 {
+        ans = max(ans, even[0] + even[1])
     }
-    println!("{}", if ans { "Yes" } else { "No" })
+    if odd.len() >= 2 {
+        ans = max(ans, odd[0] + odd[1])
+    }
+    println!("{}", ans)
 }
