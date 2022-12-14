@@ -1,21 +1,7 @@
-use proconio::{input, marker::Chars};
-use std::collections::HashSet;
+use proconio::input;
 
 fn main() {
-    input! {n:usize,s:[Chars;n]}
-    let mut memo = HashSet::new();
-    let mark = "HDCS".chars().into_iter().collect::<Vec<_>>();
-    let num = "A23456789TJQK".chars().into_iter().collect::<Vec<_>>();
-    let mut ans = true;
-    for si in s {
-        if mark.contains(&si[0]) && num.contains(&si[1]) {
-            if memo.contains(&si) {
-                ans = false
-            }
-            memo.insert(si);
-        } else {
-            ans = false
-        }
-    }
-    println!("{}", if ans { "Yes" } else { "No" })
+    input! {n:usize,h:[i32;n]}
+    let ans = h.iter().enumerate().max_by(|a, b| a.1.cmp(b.1)).unwrap();
+    println!("{}", ans.0 + 1)
 }
