@@ -1,23 +1,20 @@
 use proconio::{input, marker::Chars};
 
 fn main() {
-    input! {n:usize,m:usize,s:[Chars;n]}
-    let mut ans = 0;
-    for a in 0..n {
-        for b in a..n {
-            if a == b {
-                continue;
-            }
-            let mut c = 0;
-            for j in 0..m {
-                if s[a][j] == 'o' || s[b][j] == 'o' {
-                    c += 1;
-                }
-            }
-            if c == m {
-                ans += 1
-            }
+    input! {_n:usize,mut s:Chars}
+    let mut memo = Vec::<usize>::new();
+    let mut toggle = false;
+    for (i, si) in s.iter().enumerate() {
+        if si == &'"' {
+            toggle = !toggle;
+        }
+        if !toggle && si == &',' {
+            memo.push(i)
         }
     }
+    for i in memo {
+        s[i] = '.';
+    }
+    let ans: String = s.iter().collect();
     println!("{}", ans)
 }
