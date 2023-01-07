@@ -1,20 +1,9 @@
-use proconio::{input, marker::Chars};
+use proconio::input;
 
 fn main() {
-    input! {_n:usize,mut s:Chars}
-    let mut memo = Vec::<usize>::new();
-    let mut toggle = false;
-    for (i, si) in s.iter().enumerate() {
-        if si == &'"' {
-            toggle = !toggle;
-        }
-        if !toggle && si == &',' {
-            memo.push(i)
-        }
+    input! {n:usize,mut s:[String;n]}
+    s.reverse();
+    for si in s {
+        println!("{}", si)
     }
-    for i in memo {
-        s[i] = '.';
-    }
-    let ans: String = s.iter().collect();
-    println!("{}", ans)
 }
