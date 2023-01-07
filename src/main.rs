@@ -1,9 +1,15 @@
 use proconio::input;
 
 fn main() {
-    input! {n:usize,mut s:[String;n]}
-    s.reverse();
-    for si in s {
-        println!("{}", si)
+    input! {t:usize}
+    for _ in 0..t {
+        input! {n:usize,a:[i32;n]}
+        let mut ans = 0;
+        for ai in a {
+            if ai % 2 == 1 {
+                ans += 1;
+            }
+        }
+        println!("{}", ans)
     }
 }
