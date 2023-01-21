@@ -1,12 +1,18 @@
-use proconio::{input, marker::Chars};
+use proconio::input;
 
 fn main() {
-    input! {mut s:Chars}
-    let mut ans: u128 = 0;
-    s.reverse();
-    for (i, &c) in s.iter().enumerate() {
-        let bit = (c as u128 - 64) * 26_u128.pow(i as u32);
-        ans += bit
+    input! {n:usize,p:usize,q:usize,r:usize,_s:usize,mut a:[i32;n]}
+    let (p, q, r) = (p - 1, q - 1, r - 1);
+    for i in 0..=(q - p) {
+        let t = a[p + i];
+        a[p + i] = a[r + i];
+        a[r + i] = t;
     }
-    println!("{}", ans)
+    println!(
+        "{}",
+        a.iter()
+            .map(|x| x.to_string())
+            .collect::<Vec<_>>()
+            .join(" ")
+    )
 }
