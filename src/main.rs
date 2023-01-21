@@ -1,16 +1,17 @@
 use proconio::{input, marker::Chars};
 
 fn main() {
-    input! {s:Chars}
-    let mut ans = 0;
-    let mut i: usize = 0;
-    while s.len() > i {
-        if s.len() > i + 1 && s[i] == '0' && s[i + 1] == '0' {
-            i += 1;
+    input! {n:usize,s:Chars}
+    for i in 1..n {
+        let mut l = 0;
+        for k in 0..(n - i) {
+            // println!("{} {} {} {}", s[k], s[k + i], k, k + i);
+            if s[k] != s[k + i] {
+                l += 1
+            } else {
+                break;
+            }
         }
-        ans += 1;
-
-        i += 1;
+        println!("{}", l)
     }
-    println!("{}", ans)
 }
