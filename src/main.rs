@@ -1,18 +1,30 @@
-use proconio::input;
+use proconio::{input, marker::Chars};
 
 fn main() {
-    input! {n:usize,p:usize,q:usize,r:usize,_s:usize,mut a:[i32;n]}
-    let (p, q, r) = (p - 1, q - 1, r - 1);
-    for i in 0..=(q - p) {
-        let t = a[p + i];
-        a[p + i] = a[r + i];
-        a[r + i] = t;
+    input! {_n:usize,s:Chars}
+    let mut ans: String = "".to_string();
+
+    let mut nya = false;
+    for si in s {
+        match si {
+            'n' => {
+                nya = true;
+                ans = format!("{}{}", ans, si.to_string());
+            }
+            'a' => {
+                if nya {
+                    ans = format!("{}{}", ans, "ya");
+                } else {
+                    ans = format!("{}{}", ans, si.to_string());
+                }
+                nya = false
+            }
+            _ => {
+                nya = false;
+                ans = format!("{}{}", ans, si.to_string());
+            }
+        }
     }
-    println!(
-        "{}",
-        a.iter()
-            .map(|x| x.to_string())
-            .collect::<Vec<_>>()
-            .join(" ")
-    )
+
+    println!("{}", ans)
 }
