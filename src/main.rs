@@ -1,12 +1,13 @@
-use proconio::input;
+use proconio::{input, marker::Chars};
 
 fn main() {
-    input! {n:usize,m:usize,c:i32,b:[i32;m], codes:[[i32;m];n]}
+    input! {s:Chars}
     let mut ans = 0;
-    for code in codes {
-        let tmp: i32 = code.iter().zip(b.iter()).map(|(a, b)| a * b).sum();
-        if tmp + c > 0 {
-            ans += 1;
+    let mut white_count = 0;
+    for (idx, si) in s.iter().enumerate() {
+        if si == &'W' {
+            ans += idx - white_count;
+            white_count += 1;
         }
     }
     println!("{}", ans)
