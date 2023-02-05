@@ -1,18 +1,33 @@
-use petgraph::unionfind::UnionFind;
-use proconio::input;
+use proconio::{input, marker::Chars};
 
 fn main() {
-    input! {n:usize,m:usize,edges:[(usize,usize);m]}
+    input! {_n:usize,a:i32,b:i32,s:Chars}
 
-    let mut graph = UnionFind::<usize>::new(n);
+    let mut a_num = 0;
+    let mut b_num = 0;
 
-    let mut ans = 0;
-    for (a, b) in edges {
-        let (a, b) = (a - 1, b - 1);
-        if graph.equiv(a, b) {
-            ans += 1;
+    for si in s {
+        let tmp = (a + b) > (a_num + b_num);
+        match si {
+            'a' => {
+                if tmp {
+                    println!("Yes");
+                    a_num += 1;
+                } else {
+                    println!("No");
+                }
+            }
+            'b' => {
+                if tmp && b > b_num {
+                    println!("Yes");
+                    b_num += 1;
+                } else {
+                    println!("No");
+                }
+            }
+            _ => {
+                println!("No");
+            }
         }
-        graph.union(a, b);
     }
-    println!("{}", ans)
 }
