@@ -1,13 +1,18 @@
 use proconio::{input, marker::Chars};
 
 fn main() {
-    input! {s:Chars}
-    let mut ans = 0;
-    let mut white_count = 0;
-    for (idx, si) in s.iter().enumerate() {
-        if si == &'W' {
-            ans += idx - white_count;
-            white_count += 1;
+    input! {mut s:Chars}
+    let mut ans = 2;
+    for _ in 0..s.len() {
+        s.pop();
+        let si = s.len();
+        if si % 2 == 0 {
+            let si = si / 2;
+            let s1 = &s[..si];
+            let s2 = &s[si..];
+            if s1 == s2 {
+                ans = std::cmp::max(ans, si * 2);
+            }
         }
     }
     println!("{}", ans)
