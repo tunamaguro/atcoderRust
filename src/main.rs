@@ -1,19 +1,34 @@
-use proconio::{input, marker::Chars};
+use proconio::input;
+use std::collections::{self, HashMap};
+
+fn dfs(i: usize, memo: &HashMap<usize, usize>, v: &mut Vec<usize>, seen: &mut Vec<bool>) {
+    seen[i - 1] = true;
+    if let Some(to) = memo.get(&i) {
+        dfs(*to, memo, v, seen)
+    }
+    v.push(i);
+}
 
 fn main() {
-    input! {s:Chars}
-    let ans = s
-        .iter()
-        .map(|&c| {
-            if c == '0' {
-                '1'.to_string()
-            } else {
-                '0'.to_string()
-            }
-        })
-        .collect::<Vec<_>>();
+    input! {n:usize,m:usize,a:[usize;m]}
+    let mut memo = collections::HashMap::<usize, usize>::new();
+    for ai in a {
+        memo.insert(ai, ai + 1);
+    }
 
-    let ans = ans.join("");
-
-    println!("{}", ans)
+    let mut ans = vec![];
+    let mut seen = vec![false; n];
+    for i in 1..=n {
+        if seen[i - 1] {
+            continue;
+        }
+        dfs(i, &memo, &mut ans, &mut seen)
+    }
+    println!(
+        "{}",
+        ans.iter()
+            .map(|s| s.to_string())
+            .collect::<Vec<_>>()
+            .join(" ")
+    )
 }
