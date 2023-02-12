@@ -1,35 +1,29 @@
 use proconio::input;
 
-fn check(n: usize, t: Vec<&Vec<usize>>) -> bool {
-    let mut all = vec![false; n];
-    for a in t {
-        for i in a {
-            all[i - 1] = true;
-        }
-    }
-
-    all.iter().all(|x| *x)
-}
-
 fn main() {
-    input! {n:usize,m:usize}
-    let mut s = vec![];
-    for _ in 0..m {
-        input! {c:usize,a:[usize;c]}
-        s.push(a)
+    input! {n:usize,a:[usize;n],m:usize,b:[usize;m],x:usize}
+
+    let mut memo = vec![false; x + 1];
+    let mut mochi = vec![false; x + 1];
+    for bi in b {
+        mochi[bi] = true;
     }
+    memo[0] = true;
+    for i in 0..x {
+        if mochi[i] {
+            continue;
+        }
 
-    let mut ans = 0;
-    for bit in 0..(1 << m) {
-        let l: Vec<_> = (0..m)
-            .filter(|x| bit & (1 << x) != 0)
-            .map(|x| &s[x])
-            .collect();
+        if !memo[i] {
+            continue;
+        }
 
-        if check(n, l) {
-            ans += 1;
+        for &ai in &a {
+            if i + ai <= x {
+                memo[i + ai] = true;
+            }
         }
     }
 
-    println!("{}", ans)
+    println!("{}", if memo[x] { "Yes" } else { "No" })
 }
