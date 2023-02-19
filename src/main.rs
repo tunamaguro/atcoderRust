@@ -1,12 +1,16 @@
-use proconio::input;
+use proconio::{input, marker::Chars};
 
 fn main() {
-    input! {n:usize,m:usize,a:[i32;n],b:[usize;m]}
-    let mut ans = 0;
-
-    for bi in b {
-        ans += a[bi - 1]
+    input! {_n:usize,k:usize,s:Chars}
+    let mut ans = String::new();
+    let mut c = 0;
+    for si in s {
+        if si == 'o' && c < k {
+            ans.push('o');
+            c += 1;
+        } else {
+            ans.push('x');
+        }
     }
-
     println!("{}", ans)
 }
