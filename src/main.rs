@@ -1,16 +1,18 @@
-use proconio::{input, marker::Chars};
+use proconio::input;
 
 fn main() {
-    input! {_n:usize,k:usize,s:Chars}
-    let mut ans = String::new();
-    let mut c = 0;
-    for si in s {
-        if si == 'o' && c < k {
-            ans.push('o');
-            c += 1;
-        } else {
-            ans.push('x');
+    input! {n:usize,k:usize,mut a:[i32;n]}
+    a.sort();
+    a.dedup();
+    let mut ans = 0;
+    for (i, &ai) in a.iter().enumerate() {
+        if i != ai as usize {
+            break;
         }
+        if i >= k {
+            break;
+        }
+        ans = ai + 1;
     }
     println!("{}", ans)
 }
