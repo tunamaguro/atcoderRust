@@ -1,29 +1,12 @@
 use proconio::input;
 
 fn main() {
-    input! {n:usize,a:[usize;n],m:usize,b:[usize;m],x:usize}
+    input! {n:usize,m:usize,a:[i32;n],b:[usize;m]}
+    let mut ans = 0;
 
-    let mut memo = vec![false; x + 1];
-    let mut mochi = vec![false; x + 1];
     for bi in b {
-        mochi[bi] = true;
-    }
-    memo[0] = true;
-    for i in 0..x {
-        if mochi[i] {
-            continue;
-        }
-
-        if !memo[i] {
-            continue;
-        }
-
-        for &ai in &a {
-            if i + ai <= x {
-                memo[i + ai] = true;
-            }
-        }
+        ans += a[bi - 1]
     }
 
-    println!("{}", if memo[x] { "Yes" } else { "No" })
+    println!("{}", ans)
 }
