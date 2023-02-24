@@ -1,17 +1,22 @@
 use proconio::input;
-use std::collections::HashMap;
+
+fn manhattan(p1: (i32, i32), p2: (i32, i32)) -> i32 {
+    (p1.0 - p2.0).abs() + (p1.1 - p2.1).abs()
+}
+
 fn main() {
-    input! {n:usize,mut a:[i32;n]}
-    let mut memo = HashMap::new();
-    for i in a {
-        *memo.entry(i).or_insert(0) += 1;
-    }
+    input! {n:usize,m:usize,s:[(i32,i32);n],g:[(i32,i32);m]}
+    let ans = s
+        .iter()
+        .map(|&p1| g.iter().map(move |&p2| manhattan(p1, p2)))
+        .map(|x| x.collect::<Vec<_>>())
+        // .map(|x| x.rev().collect::<Vec<_>>())
+        // .map(|x| *x.iter().min_by_key(|&d| d).unwrap())
+        .collect::<Vec<_>>();
 
-    let mut ans = 0;
-    for i in 0..(10_i32.pow(5)) {
-        let total: i32 = (i..(i + 3)).map(|i| memo.get(&i).unwrap_or(&0)).sum();
-        ans = std::cmp::max(ans, total);
+    for i in 0..n {
+        let m = ans[i].iter().min().unwrap();
+        let id = ans[i].iter().position(|x| x == m).unwrap() + 1;
+        println!("{}", id)
     }
-
-    println!("{}", ans)
 }
