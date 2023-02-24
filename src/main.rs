@@ -1,11 +1,17 @@
 use proconio::input;
-
-// ka=c mod b
-// ka-c=lm
-
+use std::collections::HashMap;
 fn main() {
-    input! {a:i32,b:i32,c:i32}
-    let ans = (0..110).map(|x| x * a).any(|x| x % b == c);
+    input! {n:usize,mut a:[i32;n]}
+    let mut memo = HashMap::new();
+    for i in a {
+        *memo.entry(i).or_insert(0) += 1;
+    }
 
-    println!("{}", if ans { "YES" } else { "NO" })
+    let mut ans = 0;
+    for i in 0..(10_i32.pow(5)) {
+        let total: i32 = (i..(i + 3)).map(|i| memo.get(&i).unwrap_or(&0)).sum();
+        ans = std::cmp::max(ans, total);
+    }
+
+    println!("{}", ans)
 }
