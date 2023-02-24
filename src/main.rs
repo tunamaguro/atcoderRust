@@ -1,10 +1,10 @@
 use proconio::input;
 
 fn main() {
-    input! {h:i128,w:i128}
-    let mut ans = h * w / 2 + (h * w) % 2;
+    input! {h:usize,w:usize}
     if h == 1 || w == 1 {
-        ans = 1;
+        println!("1");
+        return;
     }
-    println!("{}", ans)
+    println!("{}", (h * w / 2) + (h * w % 2))
 }
