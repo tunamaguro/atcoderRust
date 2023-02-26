@@ -1,15 +1,32 @@
-use std::collections::VecDeque;
-
-use proconio::input;
+use proconio::{input, marker::Chars};
+use std::collections::HashSet;
 
 fn main() {
-    input! {n:usize,mut x:[i32;5*n]}
-    x.sort();
-    let mut x = x.into_iter().collect::<VecDeque<_>>();
-    for _ in 0..n {
-        x.pop_back();
-        x.pop_front();
+    input! {_n:usize,s:Chars}
+    let mut memo = HashSet::new();
+    let mut point = (0, 0);
+    memo.insert(point);
+    for c in s {
+        match c {
+            'L' => {
+                point = (point.0 - 1, point.1);
+            }
+            'R' => {
+                point = (point.0 + 1, point.1);
+            }
+            'U' => {
+                point = (point.0, point.1 + 1);
+            }
+            'D' => {
+                point = (point.0, point.1 - 1);
+            }
+            _ => unreachable!(),
+        }
+        if memo.contains(&point) {
+            println!("Yes");
+            return;
+        }
+        memo.insert(point);
     }
-    let ans = x.iter().map(|&x| x as f64).sum::<f64>() / (3.0 * n as f64);
-    println!("{}", ans)
+    println!("No")
 }
