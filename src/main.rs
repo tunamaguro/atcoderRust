@@ -1,30 +1,41 @@
-use proconio::{input, marker::Chars};
+use proconio::input;
 
 fn main() {
-    input! {h:usize,w:usize, s:[Chars;h]}
-    let p = '#';
+    input! {n:i32}
 
-    let mut ans = true;
-    for i in 0..h {
-        for j in 0..w {
-            if s[i][j] != p {
-                continue;
+    let mut ans = 0;
+    for x in 1..n {
+        let y = n - x;
+        // println!("x = {} y = {}", x, y);
+        let (mut a, mut b) = (0, 0);
+
+        for i in 1..=x {
+            if i * i > x {
+                break;
             }
-            let mut con = false;
-            if i > 0 {
-                con |= s[i - 1][j] == p;
+            if x % i == 0 {
+                a += 1;
+                if x != i * i {
+                    a += 1;
+                }
             }
-            if i < (h - 1) {
-                con |= s[i + 1][j] == p
-            }
-            if j > 0 {
-                con |= s[i][j - 1] == p;
-            }
-            if j < (w - 1) {
-                con |= s[i][j + 1] == p
-            }
-            ans &= con;
         }
+
+        for i in 1..=y {
+            if i * i > y {
+                break;
+            }
+            if y % i == 0 {
+                b += 1;
+                if y != i * i {
+                    b += 1;
+                }
+            }
+        }
+
+        // println!("a = {} b = {}", a, b);
+
+        ans += a * b;
     }
-    println!("{}", if ans { "Yes" } else { "No" })
+    println!("{}", ans)
 }
