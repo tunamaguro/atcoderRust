@@ -1,19 +1,35 @@
 use proconio::input;
-
-fn gcd(a: i32, b: i32) -> i32 {
-    if b == 0 {
-        a
-    } else {
-        gcd(b, a % b)
-    }
-}
+use std::cmp::Ordering;
 
 fn main() {
-    input! {n:usize,x:i32,a:[i32;n]}
-    let a: Vec<_> = a.iter().map(|i| (i - x).abs()).collect();
-    let mut ans = a[0];
-    for i in a.iter().skip(1) {
-        ans = gcd(ans, *i);
+    input! {n:usize,h:[i32;n]}
+    // 0="=" 1="<" -1=">"
+    let mut a = 0;
+    let mut b = h[0];
+    let mut memo = vec![h[0]];
+    for i in h {
+        match i.cmp(&b) {
+            Ordering::Equal => {}
+            Ordering::Greater => {
+                if a == -1 {
+                    memo.push(b);
+                    memo.push(b);
+                }
+                a = 1;
+                *memo.last_mut().unwrap() = i;
+            }
+            Ordering::Less => a = -1,
+        }
+
+        b = i;
+    }
+    let mut ans = 0;
+    let mut i = 0;
+    for hi in memo {
+        if hi >= i {
+            ans += (hi - i).abs();
+        }
+        i = hi;
     }
     println!("{}", ans)
 }
