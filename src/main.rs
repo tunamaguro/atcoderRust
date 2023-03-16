@@ -1,26 +1,19 @@
-use proconio::{input, marker::Chars};
+use proconio::input;
+
+fn gcd(a: i32, b: i32) -> i32 {
+    if b == 0 {
+        a
+    } else {
+        gcd(b, a % b)
+    }
+}
 
 fn main() {
-    input! {s:Chars}
-    let mut wb = 0;
-    let mut bw = 0;
-    for (i, &c) in s.iter().enumerate() {
-        match (i % 2, c) {
-            (0, '0') => {
-                wb += 1;
-            }
-            (1, '0') => {
-                bw += 1;
-            }
-            (0, '1') => {
-                bw += 1;
-            }
-            (1, '1') => {
-                wb += 1;
-            }
-            _ => unreachable!(),
-        }
+    input! {n:usize,x:i32,a:[i32;n]}
+    let a: Vec<_> = a.iter().map(|i| (i - x).abs()).collect();
+    let mut ans = a[0];
+    for i in a.iter().skip(1) {
+        ans = gcd(ans, *i);
     }
-    let ans = std::cmp::min(wb, bw);
     println!("{}", ans)
 }
