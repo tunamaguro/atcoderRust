@@ -1,14 +1,17 @@
-use proconio::{input, marker::Chars};
+use proconio::input;
+use std::collections::HashMap;
 
 fn main() {
-    input! {board:[Chars;8]}
-    let col = (0..8).map(|x| (x + b'a') as char).collect::<Vec<_>>();
-    let row = (1..=8).rev().collect::<Vec<_>>();
-    for (i, r) in board.iter().enumerate() {
-        for (j, c) in r.iter().enumerate() {
-            if *c == '*' {
-                println!("{}{}", col[j], row[i])
-            }
-        }
+    input! {n:usize,x:i32,a:[i32;n]}
+    let mut memo = HashMap::new();
+    for i in a {
+        *memo.entry(i).or_insert(0) += 1
     }
+    let mut ans = false;
+    for ai in memo.keys() {
+        let aj = -(x - ai);
+        let has_pair = memo.contains_key(&aj);
+        ans |= has_pair
+    }
+    println!("{}", if ans { "Yes" } else { "No" })
 }
