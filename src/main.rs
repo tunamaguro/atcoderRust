@@ -1,17 +1,14 @@
 use proconio::input;
-use std::collections::HashMap;
 
 fn main() {
-    input! {n:usize,x:i32,a:[i32;n]}
-    let mut memo = HashMap::new();
-    for i in a {
-        *memo.entry(i).or_insert(0) += 1
-    }
-    let mut ans = false;
-    for ai in memo.keys() {
-        let aj = -(x - ai);
-        let has_pair = memo.contains_key(&aj);
-        ans |= has_pair
-    }
-    println!("{}", if ans { "Yes" } else { "No" })
+    input! {n:usize,d:i32,t:[i32;n]}
+    let mut ans = -1;
+    t.iter().skip(1).fold(t[0], |acc, x| {
+        if ans == -1 && x - acc <= d {
+            ans = *x;
+        }
+        *x
+    });
+
+    println!("{}", ans)
 }
