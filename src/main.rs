@@ -1,31 +1,24 @@
-use itertools::Itertools;
-use proconio::{input, marker::Chars};
+use proconio::input;
+use std::cmp::{max, min};
 
 fn main() {
-    input! {h:usize,_w:usize,s:[Chars;h]}
-    let mut ans = s.clone();
-
-    for (i, r) in s.iter().enumerate() {
-        let mut has_before = false;
-        for (j, c) in r.iter().enumerate() {
-            if has_before && c == &'T' {
-                ans[i][j - 1] = 'P';
-                ans[i][j] = 'C';
-                has_before = false;
-                continue;
-            }
-            if c == &'T' {
-                has_before = true;
-                continue;
-            }
-            has_before = false
+    input! {a:i128,b:i128}
+    let mut ans = 0;
+    let mut x = max(a, b);
+    let mut y = min(a, b);
+    // println!("x = {}  y = {}", x, y);
+    while x != y {
+        // println!("x = {}  y = {}  ans = {}", x, y, ans);
+        let div = x / y;
+        ans += div;
+        let a = x % y;
+        let b = y;
+        if a == 0 {
+            ans -= 1;
+            break;
         }
+        x = max(a, b);
+        y = min(a, b);
     }
-    let ans = ans
-        .iter()
-        .map(|r| r.iter().map(|x| x.to_string()).join(""))
-        .collect::<Vec<_>>();
-    for r in ans {
-        println!("{}", r)
-    }
+    println!("{}", ans)
 }
