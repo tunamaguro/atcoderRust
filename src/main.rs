@@ -1,32 +1,31 @@
+use itertools::Itertools;
 use proconio::{input, marker::Chars};
 
 fn main() {
-    input! {s:Chars}
-    let mut ans = true;
+    input! {h:usize,_w:usize,s:[Chars;h]}
+    let mut ans = s.clone();
 
-    let mut b1 = -1;
-    for (i, c) in s.iter().enumerate() {
-        if b1 != -1 && c == &'B' {
-            let x = b1;
-            let y = i as i32;
-            ans &= x % 2 != y % 2;
-            break;
-        }
-        if b1 == -1 && c == &'B' {
-            b1 = i as i32;
+    for (i, r) in s.iter().enumerate() {
+        let mut has_before = false;
+        for (j, c) in r.iter().enumerate() {
+            if has_before && c == &'T' {
+                ans[i][j - 1] = 'P';
+                ans[i][j] = 'C';
+                has_before = false;
+                continue;
+            }
+            if c == &'T' {
+                has_before = true;
+                continue;
+            }
+            has_before = false
         }
     }
-
-    let mut r = 0;
-    for c in s {
-        if c == 'K' && r != 1 {
-            ans = false;
-            break;
-        }
-        if c == 'R' {
-            r += 1;
-        }
+    let ans = ans
+        .iter()
+        .map(|r| r.iter().map(|x| x.to_string()).join(""))
+        .collect::<Vec<_>>();
+    for r in ans {
+        println!("{}", r)
     }
-
-    println!("{}", if ans { "Yes" } else { "No" })
 }
