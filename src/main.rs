@@ -1,29 +1,29 @@
-use proconio::{input, marker::Chars};
-use std::cmp::max;
+use proconio::input;
+
+use proconio::source::line::LineSource;
+use std::io;
+use std::io::BufReader;
 
 fn main() {
-    input! {_n:usize,s:Chars}
-    let mut ans = -1;
-    let mut c = 0;
-    let mut has_kushi = false;
-    for i in s {
-        match i {
-            'o' => {
-                c += 1;
-                if has_kushi && c != 0 {
-                    ans = max(ans, c);
-                }
+    let mut stdin = LineSource::new(BufReader::new(io::stdin()));
+    macro_rules! input(($($tt:tt)*) => (proconio::input!(from &mut stdin, $($tt)*)));
+
+    input! {n:i32}
+    let mut left = 0;
+    let mut right = n;
+    for _ in 0..20 {
+        let mid = left + (right - left) / 2;
+        if right - left > 1 {
+            println!("? {}", mid);
+            input! {s:i32}
+            match s {
+                0 => left = mid,
+                1 => right = mid,
+                _ => unreachable!(),
             }
-            '-' => {
-                has_kushi = true;
-                if has_kushi && c != 0 {
-                    ans = max(ans, c);
-                }
-                c = 0;
-            }
-            _ => unreachable!(),
+        } else {
+            println!("! {}", left);
+            break;
         }
     }
-
-    println!("{}", ans)
 }
