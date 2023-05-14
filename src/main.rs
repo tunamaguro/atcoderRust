@@ -1,23 +1,18 @@
-use proconio::{input, marker::Chars};
+use itertools::Itertools;
+use proconio::input;
 
 fn main() {
-    input! {n:usize,s:Chars}
-    let mut t = 0;
-    let mut a = 0;
-    let half = n / 2 + n % 2;
-    for si in s {
-        match si {
-            'T' => t += 1,
-            'A' => a += 1,
-            _ => unreachable!(),
+    input! {n:usize,a:[usize;n]}
+    let mut ans = vec![];
+    ans.push(a[0]);
+    for &ai in a.iter().skip(1) {
+        let l = *ans.last().unwrap();
+        for i in (l..=ai).skip(1) {
+            ans.push(i);
         }
-        if t >= half {
-            println!("T");
-            break;
-        }
-        if a >= half {
-            println!("A");
-            break;
+        for i in (ai..l).rev() {
+            ans.push(i);
         }
     }
+    println!("{}", ans.iter().join(" "))
 }
