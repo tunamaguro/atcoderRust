@@ -1,28 +1,28 @@
+use itertools::{self, Itertools};
 use proconio::input;
-use std::collections::VecDeque;
-
 fn main() {
-    input! {k:usize}
-    let mut queue = VecDeque::<usize>::new();
-    for i in 1..=9 {
-        queue.push_back(i)
-    }
-
-    for _ in 0..k - 1 {
-        let a = queue.pop_front().unwrap();
-        let l = a % 10;
-        if l == 0 {
-            queue.push_back(10 * a + l);
-            queue.push_back(10 * a + l + 1);
-        } else if l == 9 {
-            queue.push_back(10 * a + l - 1);
-            queue.push_back(10 * a + l);
-        } else {
-            queue.push_back(10 * a + l - 1);
-            queue.push_back(10 * a + l);
-            queue.push_back(10 * a + l + 1);
+    input! {h:usize,w:usize,a:usize,b:usize}
+    let mut ans = vec![];
+    for hi in 1..=h {
+        let mut s = vec![];
+        for wi in 1..=w {
+            if hi <= b {
+                if wi <= a {
+                    s.push(0)
+                } else {
+                    s.push(1)
+                }
+            } else {
+                if wi <= a {
+                    s.push(1)
+                } else {
+                    s.push(0)
+                }
+            }
         }
+        ans.push(s.iter().map(|x| x.to_string()).join(""))
     }
-
-    println!("{}", queue.pop_front().unwrap())
+    for i in ans {
+        println!("{}", i)
+    }
 }
