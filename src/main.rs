@@ -1,15 +1,28 @@
-use itertools::{self, Itertools};
 use proconio::input;
+use std::collections::VecDeque;
 
 fn main() {
-    input! {n:usize}
-    let mut v = vec![1, 2, 3, 4, 5, 6];
-    let t = n % (5 * 6);
-    for i in 0..t {
-        let a = i % 5;
-        let b = a + 1;
-        v.swap(a, b)
+    input! {k:usize}
+    let mut queue = VecDeque::<usize>::new();
+    for i in 1..=9 {
+        queue.push_back(i)
     }
-    let ans = v.iter().map(|s| s.to_string()).join("");
-    println!("{}", ans)
+
+    for _ in 0..k - 1 {
+        let a = queue.pop_front().unwrap();
+        let l = a % 10;
+        if l == 0 {
+            queue.push_back(10 * a + l);
+            queue.push_back(10 * a + l + 1);
+        } else if l == 9 {
+            queue.push_back(10 * a + l - 1);
+            queue.push_back(10 * a + l);
+        } else {
+            queue.push_back(10 * a + l - 1);
+            queue.push_back(10 * a + l);
+            queue.push_back(10 * a + l + 1);
+        }
+    }
+
+    println!("{}", queue.pop_front().unwrap())
 }
