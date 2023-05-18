@@ -1,28 +1,36 @@
-use itertools::{self, Itertools};
 use proconio::input;
+use std::{
+    cmp::Reverse,
+    collections::{BinaryHeap, VecDeque},
+};
 fn main() {
-    input! {h:usize,w:usize,a:usize,b:usize}
-    let mut ans = vec![];
-    for hi in 1..=h {
-        let mut s = vec![];
-        for wi in 1..=w {
-            if hi <= b {
-                if wi <= a {
-                    s.push(0)
+    input! {q:usize}
+    // println!("---debug---");
+    let mut a = VecDeque::new();
+    let mut heap = BinaryHeap::new();
+    for _ in 0..q {
+        input! {t:usize}
+        match t {
+            1 => {
+                input! {x:i32}
+                a.push_back(x);
+            }
+            2 => {
+                if heap.is_empty() {
+                    let x = a.pop_front().unwrap();
+                    println!("{}", x)
                 } else {
-                    s.push(1)
-                }
-            } else {
-                if wi <= a {
-                    s.push(1)
-                } else {
-                    s.push(0)
+                    let x: Reverse<i32> = heap.pop().unwrap();
+                    println!("{}", x.0)
                 }
             }
+            3 => {
+                for i in &a {
+                    heap.push(Reverse(*i));
+                }
+                a.clear();
+            }
+            _ => unreachable!(),
         }
-        ans.push(s.iter().map(|x| x.to_string()).join(""))
-    }
-    for i in ans {
-        println!("{}", i)
     }
 }
