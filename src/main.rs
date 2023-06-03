@@ -1,13 +1,20 @@
-use itertools::Itertools;
 use proconio::input;
 
 fn main() {
-    input! {n:usize,a:[(String,usize);n]}
-    let m_idx = a.iter().position_min_by(|x, y| x.1.cmp(&y.1)).unwrap();
-    for i in a.iter().take(n).skip(m_idx) {
-        println!("{}", i.0)
-    }
-    for i in a.iter().take(m_idx) {
-        println!("{}", i.0)
+    input! {n:i32}
+    if n < 10_i32.pow(3) {
+        println!("{}", n)
+    } else if n < 10_i32.pow(4) {
+        println!("{}", n - n % 10_i32.pow(1))
+    } else if n < 10_i32.pow(5) {
+        println!("{}", n - n % 10_i32.pow(2))
+    } else if n < 10_i32.pow(6) {
+        println!("{}", n - n % 10_i32.pow(3))
+    } else if n < 10_i32.pow(7) {
+        println!("{}", n - n % 10_i32.pow(4))
+    } else if n < 10_i32.pow(8) {
+        println!("{}", n - n % 10_i32.pow(5))
+    } else if n < 10_i32.pow(9) {
+        println!("{}", n - n % 10_i32.pow(6))
     }
 }
