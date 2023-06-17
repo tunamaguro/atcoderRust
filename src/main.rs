@@ -1,5 +1,5 @@
-use itertools::Itertools;
 use proconio::input;
+use std::cmp::max;
 
 trait Bound<T> {
     fn lower_bound(&self, x: &T) -> usize;
@@ -43,21 +43,21 @@ impl<T: PartialOrd> Bound<T> for [T] {
 }
 
 fn main() {
-    input! {n:usize,a:[usize;3*n]}
-    let mut c = vec![0; n];
-    let mut ans = vec![0; n];
-    for (i, &ai) in a.iter().enumerate() {
-        let ai = ai - 1;
-        c[ai] += 1;
-        if c[ai] == 2 {
-            ans[ai] = i + 1;
+    input! {n:usize,menu:[(i64,i64);n]}
+    // i番目まででのおいしさの総和の最大値
+    // 2つ目の添え字はおなかを壊しているかいないか
+    let mut dp = vec![vec![0; 2]; n + 1];
+    for (i, &(x, y)) in menu.iter().enumerate() {
+        let i = i + 1;
+        let poison = x == 1;
+        if poison {
+            dp[i][1] = max(dp[i - 1][0] + y, dp[i - 1][1]);
+            dp[i][0] = dp[i - 1][0]
+        } else {
+            let tmp = max(dp[i - 1][0], dp[i - 1][1]);
+            dp[i][0] = max(tmp + y, dp[i - 1][0]);
+            dp[i][1] = dp[i - 1][1]
         }
     }
-    let ans = ans
-        .iter()
-        .enumerate()
-        .sorted_by(|a, b| a.1.cmp(b.1))
-        .map(|x| x.0 + 1);
-    let ans = ans.map(|x| x.to_string()).join(" ");
-    println!("{}", ans)
+    println!("{}", max(dp[n][0], dp[n][1]))
 }
