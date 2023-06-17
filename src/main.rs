@@ -1,4 +1,4 @@
-use proconio::{input, marker::Chars};
+use proconio::{input};
 
 trait Bound<T> {
     fn lower_bound(&self, x: &T) -> usize;
@@ -42,9 +42,10 @@ impl<T: PartialOrd> Bound<T> for [T] {
 }
 
 fn main() {
-    input! {_n:usize,s:Chars}
-    for si in s {
-        print!("{}{}", si, si);
+    input! {a:[u128;64]}
+    let mut ans = 0;
+    for (i, ai) in a.iter().enumerate() {
+        ans += ai * 2_u128.pow(i as u32);
     }
-    println!()
+    println!("{}", ans)
 }
