@@ -1,4 +1,4 @@
-use proconio::{input, marker::Chars};
+use proconio::input;
 
 trait Bound<T> {
     fn lower_bound(&self, x: &T) -> usize;
@@ -42,15 +42,9 @@ impl<T: PartialOrd> Bound<T> for [T] {
 }
 
 fn main() {
-    input! {s:Chars}
-    if !(s.first() == Some(&'<') && s.last() == Some(&'>')) {
-        println!("No");
-        return;
-    }
-
-    if s.iter().skip(1).take(s.len() - 2).any(|c| *c != '=') {
-        println!("No");
-        return;
-    }
-    println!("Yes")
+    input! {x:i128}
+    println!(
+        "{}",
+        x / 10 + if x.is_positive() && x % 10 != 0 { 1 } else { 0 }
+    );
 }
