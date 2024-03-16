@@ -1,5 +1,4 @@
-use proconio::input;
-use std::cmp::max;
+use proconio::{input, marker::Chars};
 
 trait Bound<T> {
     fn lower_bound(&self, x: &T) -> usize;
@@ -43,21 +42,15 @@ impl<T: PartialOrd> Bound<T> for [T] {
 }
 
 fn main() {
-    input! {n:usize,menu:[(i64,i64);n]}
-    // i番目まででのおいしさの総和の最大値
-    // 2つ目の添え字はおなかを壊しているかいないか
-    let mut dp = vec![vec![0; 2]; n + 1];
-    for (i, &(x, y)) in menu.iter().enumerate() {
-        let i = i + 1;
-        let poison = x == 1;
-        if poison {
-            dp[i][1] = max(dp[i - 1][0] + y, dp[i - 1][1]);
-            dp[i][0] = dp[i - 1][0]
-        } else {
-            let tmp = max(dp[i - 1][0], dp[i - 1][1]);
-            dp[i][0] = max(tmp + y, dp[i - 1][0]);
-            dp[i][1] = dp[i - 1][1]
-        }
+    input! {s:Chars}
+    if !(s.first() == Some(&'<') && s.last() == Some(&'>')) {
+        println!("No");
+        return;
     }
-    println!("{}", max(dp[n][0], dp[n][1]))
+
+    if s.iter().skip(1).take(s.len() - 2).any(|c| *c != '=') {
+        println!("No");
+        return;
+    }
+    println!("Yes")
 }
