@@ -1,5 +1,6 @@
+use std::cmp::Ordering;
+
 use proconio::input;
-use std::collections::BTreeMap;
 
 trait Bound<T> {
     fn lower_bound(&self, x: &T) -> usize;
@@ -42,14 +43,26 @@ impl<T: PartialOrd> Bound<T> for [T] {
     }
 }
 
-fn main() {
-    input! {n:usize,beans:[(u64,u64);n]}
-    let mut memo = BTreeMap::new();
-    for (delicious,color ) in beans {
-        let min_delicious = memo.entry(color).or_insert(u64::MAX);
-        *min_delicious = std::cmp::min(delicious, *min_delicious);
+#[derive(PartialEq, Eq, Clone, Copy, Debug)]
+struct TakahashiState {
+    energy: usize,
+    position: (usize, usize),
+}
+
+impl PartialOrd for TakahashiState {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        self.energy.partial_cmp(&other.energy)
     }
-    let mut v = memo.values().collect::<Vec<_>>();
-    v.sort_unstable();
-    println!("{}", v.last().unwrap());
+}
+
+impl Ord for TakahashiState {
+    fn cmp(&self, other: &Self) -> Ordering {
+        self.energy.cmp(&other.energy)
+    }
+}
+
+fn main() {
+    input! {n:usize,a:[i32;n-1]}
+    let total = -a.iter().sum::<i32>();
+    println!("{}", total);
 }
