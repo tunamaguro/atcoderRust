@@ -62,21 +62,29 @@ impl Ord for TakahashiState {
 }
 
 fn main() {
-    input! {s:Chars}
-    let mut memo = BTreeMap::new();
+    input! {s:Chars,t:Chars}
+    let mut t = t
+        .iter()
+        .map(|c| c.to_ascii_lowercase())
+        .rev()
+        .collect::<Vec<_>>();
     for si in s {
-        *memo.entry(si).or_insert(0) += 1;
-    }
-    let mut rev = BTreeMap::new();
-    for (k, v) in memo {
-        rev.entry(v).or_insert(vec![]).push(k);
-    }
-    let mut ans = true;
-    for (_, ci) in rev {
-        if ci.len() == 0 || ci.len() == 2 {
+        if t.is_empty() {
+            break;
+        }
+        let si = si.to_ascii_lowercase();
+        let ti = t.last().unwrap();
+        if si == *ti {
+            t.pop();
+        } else {
             continue;
         }
-        ans = false;
+    }
+    let mut ans = false;
+    if t.len() == 1 && t.last() == Some(&'x') {
+        ans = true;
+    } else if t.is_empty() {
+        ans = true
     }
     println!("{}", if ans { "Yes" } else { "No" })
 }
