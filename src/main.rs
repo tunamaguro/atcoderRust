@@ -1,6 +1,6 @@
-use std::cmp::Ordering;
+use std::{cmp::Ordering, collections::BTreeMap};
 
-use proconio::input;
+use proconio::{input, marker::Chars};
 
 trait Bound<T> {
     fn lower_bound(&self, x: &T) -> usize;
@@ -62,7 +62,21 @@ impl Ord for TakahashiState {
 }
 
 fn main() {
-    input! {n:usize,a:[i32;n-1]}
-    let total = -a.iter().sum::<i32>();
-    println!("{}", total);
+    input! {s:Chars}
+    let mut memo = BTreeMap::new();
+    for si in s {
+        *memo.entry(si).or_insert(0) += 1;
+    }
+    let mut rev = BTreeMap::new();
+    for (k, v) in memo {
+        rev.entry(v).or_insert(vec![]).push(k);
+    }
+    let mut ans = true;
+    for (_, ci) in rev {
+        if ci.len() == 0 || ci.len() == 2 {
+            continue;
+        }
+        ans = false;
+    }
+    println!("{}", if ans { "Yes" } else { "No" })
 }
