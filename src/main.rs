@@ -1,6 +1,4 @@
-use std::{cmp::Ordering, collections::BTreeMap};
-
-use proconio::{input, marker::Chars};
+use proconio::input;
 
 trait Bound<T> {
     fn lower_bound(&self, x: &T) -> usize;
@@ -43,48 +41,28 @@ impl<T: PartialOrd> Bound<T> for [T] {
     }
 }
 
-#[derive(PartialEq, Eq, Clone, Copy, Debug)]
-struct TakahashiState {
-    energy: usize,
-    position: (usize, usize),
-}
-
-impl PartialOrd for TakahashiState {
-    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        self.energy.partial_cmp(&other.energy)
+fn recursive(l: u64, r: u64, org_l: u64, org_r: u64, dst: &mut Vec<(u64, u64)>) {
+    if org_l <= l && r <= org_r {
+        dst.push((l, r));
+        return;
     }
-}
-
-impl Ord for TakahashiState {
-    fn cmp(&self, other: &Self) -> Ordering {
-        self.energy.cmp(&other.energy)
+    let mid = (l + r) / 2;
+    if mid <= org_l {
+        recursive(mid, r, org_l, org_r, dst);
+    } else if org_r <= mid {
+        recursive(l, mid, org_l, org_r, dst);
+    } else {
+        recursive(l, mid, org_l, org_r, dst);
+        recursive(mid, r, org_l, org_r, dst);
     }
 }
 
 fn main() {
-    input! {s:Chars,t:Chars}
-    let mut t = t
-        .iter()
-        .map(|c| c.to_ascii_lowercase())
-        .rev()
-        .collect::<Vec<_>>();
-    for si in s {
-        if t.is_empty() {
-            break;
-        }
-        let si = si.to_ascii_lowercase();
-        let ti = t.last().unwrap();
-        if si == *ti {
-            t.pop();
-        } else {
-            continue;
-        }
+    input! {mut l:u64,mut r:u64}
+    let mut ans: Vec<(u64, u64)> = vec![];
+    recursive(0, 2_u64.pow(60), l, r, &mut ans);
+    println!("{}", ans.len());
+    for (li, ri) in ans {
+        println!("{} {}", li, ri);
     }
-    let mut ans = false;
-    if t.len() == 1 && t.last() == Some(&'x') {
-        ans = true;
-    } else if t.is_empty() {
-        ans = true
-    }
-    println!("{}", if ans { "Yes" } else { "No" })
 }
