@@ -1,3 +1,4 @@
+use itertools::Itertools;
 use proconio::input;
 
 trait Bound<T> {
@@ -41,28 +42,38 @@ impl<T: PartialOrd> Bound<T> for [T] {
     }
 }
 
-fn recursive(l: u64, r: u64, org_l: u64, org_r: u64, dst: &mut Vec<(u64, u64)>) {
-    if org_l <= l && r <= org_r {
-        dst.push((l, r));
-        return;
-    }
-    let mid = (l + r) / 2;
-    if mid <= org_l {
-        recursive(mid, r, org_l, org_r, dst);
-    } else if org_r <= mid {
-        recursive(l, mid, org_l, org_r, dst);
-    } else {
-        recursive(l, mid, org_l, org_r, dst);
-        recursive(mid, r, org_l, org_r, dst);
-    }
-}
-
 fn main() {
-    input! {mut l:u64,mut r:u64}
-    let mut ans: Vec<(u64, u64)> = vec![];
-    recursive(0, 2_u64.pow(60), l, r, &mut ans);
-    println!("{}", ans.len());
-    for (li, ri) in ans {
-        println!("{} {}", li, ri);
+    input! {n:usize,a:[usize;n]}
+    let a = a.into_iter().sorted().collect_vec();
+    let mut acc = vec![0];
+    for ai in &a {
+        acc.push(ai + acc.last().unwrap());
     }
+
+    let e = 10_usize.pow(8);
+
+    let mut ans = 0;
+    for i in 0..n - 1 {
+        let ai = a[i];
+        let ajs = &a[(i + 1)..];
+        ans += ai * ajs.len();
+        ans += acc.last().unwrap() - acc[i + 1];
+        // println!("ans = {}", ans);
+        if ai < e {
+            let lower_10e8 = ajs.lower_bound(&(e - ai));
+            // #[cfg(debug_assertions)]
+            // {
+            //     println!("ai: {}, ajs: {:?}, lower_10e8: {}", ai, ajs, lower_10e8);
+            //     println!(
+            //         "ajs.len: {}, num of over 10e8(a+b): {}",
+            //         ajs.len(),
+            //         ajs.len() - lower_10e8
+            //     );
+            // }
+            ans -= e * (ajs.len() - lower_10e8)
+        } else {
+            ans -= e * ajs.len();
+        }
+    }
+    println!("{}", ans);
 }
