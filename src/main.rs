@@ -1,6 +1,4 @@
-use itertools::Itertools;
 use proconio::input;
-use std::{collections::BTreeMap, vec};
 
 trait Bound<T> {
     fn lower_bound(&self, x: &T) -> usize;
@@ -43,51 +41,37 @@ impl<T: PartialOrd> Bound<T> for [T] {
     }
 }
 
-fn main() {
-    input! {h:usize,w:usize,n:usize,mh:usize,mw:usize,mut grid:[[usize;w];h]}
+fn dfs(cur: usize, links: &[Vec<usize>], dst: &mut [i32], d: i32) {
+    // 終了条件
+    if dst[cur] != -1 {
+        return;
+    }
+    dst[cur] = if d % 2 == 0 { 1 } else { 0 };
+    let d = d + 1;
+    for &next_idx in &links[cur] {
+        dfs(next_idx, links, dst, d)
+    }
+}
 
-    let mut count_set = vec![vec![vec![0; n]; w]; h];
-    for hi in 0..h {
-        for wi in 0..w {
-            let v = grid[hi][wi] - 1;
-            count_set[hi][wi][v] += 1;
-            for ni in 0..n {
-                if hi > 0 {
-                    count_set[hi][wi][ni] += count_set[hi - 1][wi][ni];
-                }
-                if wi > 0 {
-                    count_set[hi][wi][ni] += count_set[hi][wi - 1][ni];
-                }
-                if hi > 0 && wi > 0 {
-                    count_set[hi][wi][ni] -= count_set[hi - 1][wi - 1][ni];
-                }
-            }
-        }
+fn main() {
+    input! {n:usize,q:usize,roads:[(usize,usize);n-1],queries:[(usize,usize);q]}
+    let mut links = vec![vec![]; n];
+    for (a, b) in roads {
+        let a = a - 1;
+        let b = b - 1;
+        links[a].push(b);
+        links[b].push(a)
     }
 
-    for k in 0..=h - mh {
-        for l in 0..=w - mw {
-            let mut count = 0;
-            // println!("k: {}, l: {}", k, l);
-            let mh = mh - 1;
-            let mw = mw - 1;
-            for ni in 0..n {
-                let mut num_ = count_set[h - 1][w - 1][ni] - count_set[k + mh][l + mw][ni];
-                if k > 0 {
-                    num_ += count_set[k - 1][l + mw][ni];
-                }
-                if l > 0 {
-                    num_ += count_set[k + mh][l - 1][ni];
-                }
-                if k > 0 && l > 0 {
-                    num_ -= count_set[k - 1][l - 1][ni];
-                }
-                if num_ > 0 {
-                    count += 1;
-                }
-            }
-            print!("{} ", count);
+    let mut is_even = vec![-1; n];
+    dfs(0, &links, &mut is_even, 0);
+    for (c, d) in queries {
+        let c = c - 1;
+        let d = d - 1;
+        if is_even[c] == is_even[d] {
+            println!("Town")
+        } else {
+            println!("Road")
         }
-        println!();
     }
 }
