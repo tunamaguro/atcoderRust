@@ -42,13 +42,8 @@ impl<T: PartialOrd> Bound<T> for [T] {
 }
 
 fn main() {
-    input! {h:usize}
-    let mut plant_height: usize = 0;
-    for i in 0..10000 {
-        plant_height += 2_usize.pow(i);
-        if plant_height > h {
-            println!("{}", i + 1);
-            break;
-        }
-    }
+    input! {n:usize,mut users:[(String,usize);n]}
+    users.sort_by(|a, b| a.0.cmp(&b.0));
+    let s: usize = users.iter().map(|x| x.1).sum();
+    println!("{}", users[s % n].0)
 }
