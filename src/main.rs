@@ -1,3 +1,6 @@
+use std::vec;
+
+use itertools::Itertools;
 use proconio::input;
 
 trait Bound<T> {
@@ -42,8 +45,27 @@ impl<T: PartialOrd> Bound<T> for [T] {
 }
 
 fn main() {
-    input! {n:usize,mut users:[(String,usize);n]}
-    users.sort_by(|a, b| a.0.cmp(&b.0));
-    let s: usize = users.iter().map(|x| x.1).sum();
-    println!("{}", users[s % n].0)
+    input! {n:usize,mut cards:[(usize,usize);n]}
+    let mut cards = cards.into_iter().enumerate().collect_vec();
+    cards.sort_by(|a, b| a.1 .0.cmp(&b.1 .0).reverse().then(a.1 .1.cmp(&b.1 .1)));
+    // println!("{:?}", cards);
+    let mut ans = vec![];
+    ans.push(cards[0]);
+    for &(idx, (tuyosa, cost)) in cards.iter().skip(1) {
+        let l = ans.last().unwrap();
+        // println!("{:?} tuyosa:{}, cost:{}", l, tuyosa, cost);
+        if l.1 .0 > tuyosa && l.1 .1 < cost {
+            continue;
+        } else {
+            ans.push((idx, (tuyosa, cost)));
+        }
+    }
+    let ans_str = ans
+        .iter()
+        .map(|x| (x.0 + 1))
+        .sorted()
+        .map(|x| x.to_string())
+        .join(" ");
+    println!("{}", ans.len());
+    println!("{}", ans_str);
 }
