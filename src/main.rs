@@ -41,37 +41,14 @@ impl<T: PartialOrd> Bound<T> for [T] {
     }
 }
 
-fn dfs(cur: usize, links: &[Vec<usize>], dst: &mut [i32], d: i32) {
-    // 終了条件
-    if dst[cur] != -1 {
-        return;
-    }
-    dst[cur] = if d % 2 == 0 { 1 } else { 0 };
-    let d = d + 1;
-    for &next_idx in &links[cur] {
-        dfs(next_idx, links, dst, d)
-    }
-}
-
 fn main() {
-    input! {n:usize,q:usize,roads:[(usize,usize);n-1],queries:[(usize,usize);q]}
-    let mut links = vec![vec![]; n];
-    for (a, b) in roads {
-        let a = a - 1;
-        let b = b - 1;
-        links[a].push(b);
-        links[b].push(a)
-    }
-
-    let mut is_even = vec![-1; n];
-    dfs(0, &links, &mut is_even, 0);
-    for (c, d) in queries {
-        let c = c - 1;
-        let d = d - 1;
-        if is_even[c] == is_even[d] {
-            println!("Town")
-        } else {
-            println!("Road")
+    input! {h:usize}
+    let mut plant_height: usize = 0;
+    for i in 0..10000 {
+        plant_height += 2_usize.pow(i);
+        if plant_height > h {
+            println!("{}", i + 1);
+            break;
         }
     }
 }
