@@ -51,44 +51,32 @@ fn main() {
         memo.insert(ai - 1, ti + 1);
     }
     let mut min_bingo_time = usize::MAX;
+    let mut yoko_bingo = vec![vec![]; n];
+    let mut tate_bingo = vec![vec![]; n];
     // 横列のビンゴがあったか判定する
-    'outer: for row in 0..n {
-        let mut min_t = 0;
+    for row in 0..n {
         for col in 0..n {
             let pos = n * row + col;
             dbg!(format!("row = {}, col = {}, pos = {}", row, col, pos));
             if let Some(c) = memo.get(&pos) {
-                min_t = min_t.max(*c);
-            } else {
-                dbg!(format!(
-                    "row = {}, col = {}, pos = {} was skip",
-                    row, col, pos
-                ));
-                continue 'outer;
+                yoko_bingo[row].push(c);
+                tate_bingo[col].push(c);
             }
         }
-        dbg!(row, min_t);
-        min_bingo_time = min_bingo_time.min(min_t);
     }
-
-    // 縦列のビンゴがあったか判定する
-    'outer2: for col in 0..n {
-        let mut min_t = 0;
-        for row in 0..n {
-            let pos = n * row + col;
-            dbg!(format!("row = {}, col = {}, pos = {}", row, col, pos));
-            if let Some(c) = memo.get(&pos) {
-                min_t = min_t.max(*c);
-            } else {
-                dbg!(format!(
-                    "row = {}, col = {}, pos = {} was skip",
-                    row, col, pos
-                ));
-                continue 'outer2;
-            }
+    for i in 0..n {
+        let yoko = &mut yoko_bingo[i];
+        if yoko.len() == n {
+            yoko.sort();
+            let t_max = yoko.last().unwrap();
+            min_bingo_time = min_bingo_time.min(**t_max);
         }
-        dbg!(col, min_t);
-        min_bingo_time = min_bingo_time.min(min_t);
+        let tate = &mut tate_bingo[i];
+        if tate.len() == n {
+            tate.sort();
+            let t_max = tate.last().unwrap();
+            min_bingo_time = min_bingo_time.min(**t_max);
+        }
     }
 
     // 斜めのビンゴがあったか判定する
