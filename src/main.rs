@@ -92,8 +92,8 @@ fn main() {
     }
 
     // 斜めのビンゴがあったか判定する
-    let mut rd_min_t = 0;
-    let mut ld_min_t = 0;
+    let mut rd_min_t = vec![];
+    let mut ld_min_t = vec![];
     for i in 0..n {
         let rd_pos = n * i + i;
         let ld_pos = n * i + n - i - 1;
@@ -102,17 +102,19 @@ fn main() {
             i, rd_pos, ld_pos
         ));
         if let Some(c) = memo.get(&rd_pos) {
-            rd_min_t = rd_min_t.max(*c);
+            rd_min_t.push(c)
         }
         if let Some(c) = memo.get(&ld_pos) {
-            ld_min_t = ld_min_t.max(*c);
+            ld_min_t.push(c);
         }
     }
-    if rd_min_t!=0{
-        min_bingo_time=min_bingo_time.min(rd_min_t);
+    if rd_min_t.len() == n {
+        // dbg!(min_bingo_time, rd_min_t);
+        min_bingo_time = min_bingo_time.min(**rd_min_t.iter().max().unwrap());
     }
-    if ld_min_t!=0{
-        min_bingo_time=min_bingo_time.min(ld_min_t);
+    if ld_min_t.len() == n {
+        // dbg!(min_bingo_time, ld_min_t);
+        min_bingo_time = min_bingo_time.min(**ld_min_t.iter().max().unwrap());
     }
 
     println!(
