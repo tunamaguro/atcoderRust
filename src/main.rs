@@ -56,12 +56,18 @@ fn main() {
         let mut min_t = 0;
         for col in 0..n {
             let pos = n * row + col;
+            dbg!(format!("row = {}, col = {}, pos = {}", row, col, pos));
             if let Some(c) = memo.get(&pos) {
                 min_t = min_t.max(*c);
             } else {
+                dbg!(format!(
+                    "row = {}, col = {}, pos = {} was skip",
+                    row, col, pos
+                ));
                 continue 'outer;
             }
         }
+        dbg!(row, min_t);
         min_bingo_time = min_bingo_time.min(min_t);
     }
 
@@ -70,12 +76,18 @@ fn main() {
         let mut min_t = 0;
         for row in 0..n {
             let pos = n * row + col;
+            dbg!(format!("row = {}, col = {}, pos = {}", row, col, pos));
             if let Some(c) = memo.get(&pos) {
                 min_t = min_t.max(*c);
             } else {
+                dbg!(format!(
+                    "row = {}, col = {}, pos = {} was skip",
+                    row, col, pos
+                ));
                 continue 'outer2;
             }
         }
+        dbg!(col, min_t);
         min_bingo_time = min_bingo_time.min(min_t);
     }
 
@@ -85,6 +97,10 @@ fn main() {
     for i in 0..n {
         let rd_pos = n * i + i;
         let ld_pos = n * i + n - i - 1;
+        dbg!(format!(
+            "i = {}, rd_pos = {}, ld_pos = {}",
+            i, rd_pos, ld_pos
+        ));
         if let Some(c) = memo.get(&rd_pos) {
             rd_min_t = rd_min_t.max(*c);
         }
