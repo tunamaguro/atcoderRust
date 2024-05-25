@@ -1,6 +1,3 @@
-use std::collections::HashSet;
-
-use itertools::Itertools;
 use proconio::input;
 
 trait Bound<T> {
@@ -45,14 +42,13 @@ impl<T: PartialOrd> Bound<T> for [T] {
 }
 
 fn main() {
-    input! {a:i32,b:i32}
-    let mut hannin = HashSet::from([1, 2, 3]);
-    hannin.remove(&a);
-    hannin.remove(&b);
-
-    if hannin.len()==1{
-        println!("{}",hannin.iter().collect_vec()[0])
-    }else{
-        println!("-1")
+    input! {n:usize,m:usize,mut a:[i32;n],_b:[i32;m]}
+    a.sort();
+    let mut ans = false;
+    for (a1, a2) in a.iter().zip(a.iter().skip(1)) {
+        if a2 - a1 == 1 {
+            ans = true
+        }
     }
+    println!("{}", if ans { "Yes" } else { "No" })
 }
