@@ -44,73 +44,15 @@ impl<T: PartialOrd> Bound<T> for [T] {
 }
 
 fn main() {
-    input! {n:usize,t:usize,a:[usize;t]}
-
-    let mut memo = BTreeMap::new();
-    for (ti, ai) in a.iter().enumerate() {
-        memo.insert(ai - 1, ti + 1);
-    }
-    let mut min_bingo_time = usize::MAX;
-    let mut yoko_bingo = vec![vec![]; n];
-    let mut tate_bingo = vec![vec![]; n];
-    // 横列のビンゴがあったか判定する
-    for row in 0..n {
-        for col in 0..n {
-            let pos = n * row + col;
-            dbg!(format!("row = {}, col = {}, pos = {}", row, col, pos));
-            if let Some(c) = memo.get(&pos) {
-                yoko_bingo[row].push(c);
-                tate_bingo[col].push(c);
-            }
-        }
-    }
+    input! {n:usize,h:[i32;n]}
+    let mut cost = vec![i32::MAX; n];
+    cost[0] = 0;
     for i in 0..n {
-        let yoko = &mut yoko_bingo[i];
-        if yoko.len() == n {
-            yoko.sort();
-            let t_max = yoko.last().unwrap();
-            min_bingo_time = min_bingo_time.min(**t_max);
-        }
-        let tate = &mut tate_bingo[i];
-        if tate.len() == n {
-            tate.sort();
-            let t_max = tate.last().unwrap();
-            min_bingo_time = min_bingo_time.min(**t_max);
+        let cur_cost = cost[i];
+        for j in (i + 1)..n.min(i + 3) {
+            let c = (h[i] - h[j]).abs();
+            cost[j] = cost[j].min(c + cur_cost)
         }
     }
-
-    // 斜めのビンゴがあったか判定する
-    let mut rd_min_t = vec![];
-    let mut ld_min_t = vec![];
-    for i in 0..n {
-        let rd_pos = n * i + i;
-        let ld_pos = n * i + n - i - 1;
-        dbg!(format!(
-            "i = {}, rd_pos = {}, ld_pos = {}",
-            i, rd_pos, ld_pos
-        ));
-        if let Some(c) = memo.get(&rd_pos) {
-            rd_min_t.push(c)
-        }
-        if let Some(c) = memo.get(&ld_pos) {
-            ld_min_t.push(c);
-        }
-    }
-    if rd_min_t.len() == n {
-        // dbg!(min_bingo_time, rd_min_t);
-        min_bingo_time = min_bingo_time.min(**rd_min_t.iter().max().unwrap());
-    }
-    if ld_min_t.len() == n {
-        // dbg!(min_bingo_time, ld_min_t);
-        min_bingo_time = min_bingo_time.min(**ld_min_t.iter().max().unwrap());
-    }
-
-    println!(
-        "{}",
-        if min_bingo_time < 10000000 {
-            format!("{}", min_bingo_time)
-        } else {
-            "-1".to_string()
-        }
-    )
+    println!("{}", cost.last().unwrap())
 }
