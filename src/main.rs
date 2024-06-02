@@ -1,5 +1,4 @@
-use std::collections::BTreeMap;
-
+use itertools::Itertools;
 use proconio::input;
 
 trait Bound<T> {
@@ -44,15 +43,18 @@ impl<T: PartialOrd> Bound<T> for [T] {
 }
 
 fn main() {
-    input! {n:usize,h:[i32;n]}
-    let mut cost = vec![i32::MAX; n];
-    cost[0] = 0;
-    for i in 0..n {
-        let cur_cost = cost[i];
-        for j in (i + 1)..n.min(i + 3) {
-            let c = (h[i] - h[j]).abs();
-            cost[j] = cost[j].min(c + cur_cost)
-        }
-    }
-    println!("{}", cost.last().unwrap())
+    input! {n:usize,l:usize,r:usize}
+    let a = (1..l).collect_vec();
+    let b = (l..=r).rev().collect_vec();
+    let c = ((r + 1)..=n).collect_vec();
+
+    // dbg!(&a, &b, &c);
+
+    let ans = a
+        .iter()
+        .chain(b.iter())
+        .chain(c.iter())
+        .map(|x| x.to_string())
+        .join(" ");
+    println!("{}", ans)
 }
