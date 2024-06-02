@@ -1,4 +1,3 @@
-use itertools::Itertools;
 use proconio::input;
 
 trait Bound<T> {
@@ -43,18 +42,18 @@ impl<T: PartialOrd> Bound<T> for [T] {
 }
 
 fn main() {
-    input! {n:usize,l:usize,r:usize}
-    let a = (1..l).collect_vec();
-    let b = (l..=r).rev().collect_vec();
-    let c = ((r + 1)..=n).collect_vec();
+    input! {n:usize,m:usize,a:[i32;m],x:[[i32;m];n]}
 
-    // dbg!(&a, &b, &c);
+    let mut eiyou = vec![0; m];
+    for xi in x {
+        for (i, x_ij) in xi.iter().enumerate() {
+            *eiyou.get_mut(i).unwrap() += x_ij;
+        }
+    }
 
-    let ans = a
-        .iter()
-        .chain(b.iter())
-        .chain(c.iter())
-        .map(|x| x.to_string())
-        .join(" ");
-    println!("{}", ans)
+    let mut ans = true;
+    for i in 0..m {
+        ans &= eiyou[i] >= a[i];
+    }
+    println!("{}", if ans { "Yes" } else { "No" })
 }
