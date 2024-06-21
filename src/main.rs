@@ -42,18 +42,21 @@ impl<T: PartialOrd> Bound<T> for [T] {
 }
 
 fn main() {
-    input! {n:usize,m:usize,a:[i32;m],x:[[i32;m];n]}
-
-    let mut eiyou = vec![0; m];
-    for xi in x {
-        for (i, x_ij) in xi.iter().enumerate() {
-            *eiyou.get_mut(i).unwrap() += x_ij;
+    input! {n:usize,m:usize,mut a:[i32;n],mut b:[i32;m]}
+    a.sort_by(|a, b| a.cmp(b).reverse());
+    b.sort();
+    let mut ans = 0;
+    for bi in b {
+        if a.is_empty() {
+            println!("-1");
+            return;
+        }
+        while let Some(ai) = a.pop() {
+            if ai >= bi {
+                ans += ai;
+                break;
+            }
         }
     }
-
-    let mut ans = true;
-    for i in 0..m {
-        ans &= eiyou[i] >= a[i];
-    }
-    println!("{}", if ans { "Yes" } else { "No" })
+    println!("{}", ans);
 }
