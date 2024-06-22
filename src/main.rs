@@ -1,3 +1,4 @@
+use itertools::Itertools;
 use proconio::input;
 
 trait Bound<T> {
@@ -42,19 +43,32 @@ impl<T: PartialOrd> Bound<T> for [T] {
 }
 
 fn main() {
-    input! {n:usize,a:[i64;n]}
-    let mut ans = 0;
-    let mut cur_pos = 0;
-    let mut cur_advance = 0;
-    let mut cur_max_advance = 0;
-    for ai in a {
-        cur_max_advance = cur_max_advance.max(cur_advance + ai);
-        cur_advance += ai;
-
-        // dbg!(cur_pos, cur_advance, cur_max_advance);
-
-        ans = ans.max(cur_pos + cur_max_advance);
-        cur_pos += cur_advance;
+    input! {n:usize,m:usize,mut takahashi:[(usize,usize);m],mut aoki:[(usize,usize);m]}
+    let mut a_map = vec![vec![false; n]; n];
+    let mut b_map = vec![vec![false; n]; n];
+    for (a, b) in takahashi {
+        let (a, b) = (a - 1, b - 1);
+        a_map[a][b] = true;
+        a_map[b][a] = true;
     }
-    println!("{}", ans);
+    for (c, d) in aoki {
+        let (c, d) = (c - 1, d - 1);
+        b_map[c][d] = true;
+        b_map[d][c] = true;
+    }
+    let mut ans = false;
+    for p in (0..n).permutations(n) {
+        let mut is_same = true;
+        for i in 0..n {
+            for j in 0..n {
+                if a_map[i][j] != b_map[p[i]][p[j]] {
+                    is_same = false;
+                }
+            }
+        }
+        if is_same {
+            ans = true;
+        }
+    }
+    println!("{}", if ans { "Yes" } else { "No" })
 }
