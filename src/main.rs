@@ -42,21 +42,19 @@ impl<T: PartialOrd> Bound<T> for [T] {
 }
 
 fn main() {
-    input! {n:usize,m:usize,mut a:[i32;n],mut b:[i32;m]}
-    a.sort_by(|a, b| a.cmp(b).reverse());
-    b.sort();
+    input! {n:usize,a:[i64;n]}
     let mut ans = 0;
-    for bi in b {
-        if a.is_empty() {
-            println!("-1");
-            return;
-        }
-        while let Some(ai) = a.pop() {
-            if ai >= bi {
-                ans += ai;
-                break;
-            }
-        }
+    let mut cur_pos = 0;
+    let mut cur_advance = 0;
+    let mut cur_max_advance = 0;
+    for ai in a {
+        cur_max_advance = cur_max_advance.max(cur_advance + ai);
+        cur_advance += ai;
+
+        // dbg!(cur_pos, cur_advance, cur_max_advance);
+
+        ans = ans.max(cur_pos + cur_max_advance);
+        cur_pos += cur_advance;
     }
     println!("{}", ans);
 }
