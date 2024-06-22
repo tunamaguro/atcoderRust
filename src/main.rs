@@ -42,12 +42,31 @@ impl<T: PartialOrd> Bound<T> for [T] {
 }
 
 fn main() {
-    input! {n:usize,a:[usize;2*n]}
+    input! {mut sx:i64,sy:i64,mut tx:i64,ty:i64}
+    // xをパネルの左側にいることにする
+    if sy % 2 == 0 {
+        sx -= sx % 2;
+    } else {
+        sx -= (sx + 1) % 2;
+    }
+    if ty % 2 == 0 {
+        tx -= tx % 2;
+    } else {
+        tx -= (tx + 1) % 2;
+    }
 
-    let ans = a
-        .iter()
-        .zip(a.iter().skip(2))
-        .filter(|(a1, a2)| a1 == a2)
-        .count();
+    // dbg!(sx, sy, tx, ty);
+
+    let dx = tx - sx;
+    let dy = (ty - sy).abs();
+
+    // 上に上がる際の横移動で足りる
+    if dx.abs() <= dy {
+        println!("{}", dy);
+        return;
+    }
+    let dx = (dx.abs() - dy) * dx.signum();
+    // dbg!(dx);
+    let ans = dy + dx.abs() / 2;
     println!("{}", ans)
 }
