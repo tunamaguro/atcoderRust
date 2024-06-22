@@ -42,7 +42,12 @@ impl<T: PartialOrd> Bound<T> for [T] {
 }
 
 fn main() {
-    input! {n:usize,s:[String;n]}
-    let ans = s.iter().filter(|ss| **ss == "Takahashi").count();
+    input! {n:usize,a:[usize;2*n]}
+
+    let ans = a
+        .iter()
+        .zip(a.iter().skip(2))
+        .filter(|(a1, a2)| a1 == a2)
+        .count();
     println!("{}", ans)
 }
