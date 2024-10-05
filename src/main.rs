@@ -1,4 +1,4 @@
-use itertools::Itertools;
+#![allow(dead_code)]
 use proconio::{input, marker::Chars};
 
 trait Bound<T> {
@@ -43,8 +43,14 @@ impl<T: PartialOrd> Bound<T> for [T] {
 }
 
 fn main() {
-    input! {s:Chars}
-    let a = s.iter().rev().take(3).rev().cloned().collect_vec();
-    let e = vec!['s', 'a', 'n'];
-    println!("{}", if a == e { "Yes" } else { "No" })
+    input! {s:Chars,t:Chars}
+    for i in 0..s.len().max(t.len()) {
+        let si = s.get(i);
+        let ti = t.get(i);
+        if si != ti {
+            println!("{}", i + 1);
+            return;
+        }
+    }
+    println!("0")
 }
