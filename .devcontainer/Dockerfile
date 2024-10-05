@@ -1,9 +1,17 @@
-# See here for image contents: https://github.com/microsoft/vscode-dev-containers/tree/v0.231.4/containers/rust/.devcontainer/base.Dockerfile
+FROM rust:1.81.0-slim-bookworm
 
-# [Choice] Debian OS version (use bullseye on local arm64/Apple Silicon): buster, bullseye
-ARG VARIANT="buster"
-FROM mcr.microsoft.com/vscode/devcontainers/rust:0-${VARIANT}
 
-# [Optional] Uncomment this section to install additional packages.
-# RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-#     && apt-get -y install --no-install-recommends <your-package-list-here>
+RUN apt-get update -y && \
+    apt-get install -y \
+    git 
+
+ARG USERNAME=vscode
+ARG GROUPNAME=vscode
+ARG UID=1000
+ARG GID=1000
+RUN groupadd -g $GID $GROUPNAME && \
+    useradd -m -s /bin/bash -u $UID -g $GID $USERNAME
+
+USER ${USERNAME}
+
+RUN rustup component add rustfmt clippy
