@@ -1,4 +1,5 @@
-use proconio::input;
+use ac_library::{Mod998244353, ModInt, ModInt998244353};
+use proconio::{input, marker::Chars};
 
 trait Bound<T> {
     fn lower_bound(&self, x: &T) -> usize;
@@ -42,31 +43,10 @@ impl<T: PartialOrd> Bound<T> for [T] {
 }
 
 fn main() {
-    input! {mut sx:i64,sy:i64,mut tx:i64,ty:i64}
-    // xをパネルの左側にいることにする
-    if sy % 2 == 0 {
-        sx -= sx % 2;
-    } else {
-        sx -= (sx + 1) % 2;
+    input! {n:usize,k:usize,s:Chars}
+    let mut ans = ModInt998244353::new(0);
+    for i in 0..(n - k) {
+        let j = i + k;
+        println!("{:?}", &s[i..j]);
     }
-    if ty % 2 == 0 {
-        tx -= tx % 2;
-    } else {
-        tx -= (tx + 1) % 2;
-    }
-
-    // dbg!(sx, sy, tx, ty);
-
-    let dx = tx - sx;
-    let dy = (ty - sy).abs();
-
-    // 上に上がる際の横移動で足りる
-    if dx.abs() <= dy {
-        println!("{}", dy);
-        return;
-    }
-    let dx = (dx.abs() - dy) * dx.signum();
-    // dbg!(dx);
-    let ans = dy + dx.abs() / 2;
-    println!("{}", ans)
 }
