@@ -1,4 +1,4 @@
-use ac_library::{Mod998244353, ModInt, ModInt998244353};
+use itertools::Itertools;
 use proconio::{input, marker::Chars};
 
 trait Bound<T> {
@@ -43,10 +43,8 @@ impl<T: PartialOrd> Bound<T> for [T] {
 }
 
 fn main() {
-    input! {n:usize,k:usize,s:Chars}
-    let mut ans = ModInt998244353::new(0);
-    for i in 0..(n - k) {
-        let j = i + k;
-        println!("{:?}", &s[i..j]);
-    }
+    input! {s:Chars}
+    let a = s.iter().rev().take(3).rev().cloned().collect_vec();
+    let e = vec!['s', 'a', 'n'];
+    println!("{}", if a == e { "Yes" } else { "No" })
 }
