@@ -1,5 +1,5 @@
 #![allow(dead_code)]
-use proconio::{input, marker::Chars};
+use proconio::input;
 
 trait Bound<T> {
     fn lower_bound(&self, x: &T) -> usize;
@@ -43,17 +43,18 @@ impl<T: PartialOrd> Bound<T> for [T] {
 }
 
 fn main() {
-    input! {_n:usize,d:usize,s:Chars}
-    let mut should_eat = d;
-    let mut ans = vec![];
-    for si in s.iter().rev() {
-        if *si == '@' && should_eat > 0 {
-            ans.push('.');
-            should_eat -= 1;
-        } else {
-            ans.push(*si);
+    input! {n:usize,m:usize,a:[i32;n],b:[i32;m]}
+    let k = 2 * 100000 + 100;
+    let mut id = vec![-1; k];
+    let mut r = k;
+    for (i, ai) in a.iter().enumerate() {
+        while r as i32 > *ai {
+            r -= 1;
+            id[r] = i as i32 + 1;
         }
     }
-
-    println!("{}", ans.iter().rev().collect::<String>())
+    for bi in b {
+        let bi = bi as usize;
+        println!("{}", id[bi])
+    }
 }
