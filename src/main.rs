@@ -1,5 +1,5 @@
 #![allow(dead_code)]
-use proconio::input;
+use proconio::{input, marker::Chars};
 
 trait Bound<T> {
     fn lower_bound(&self, x: &T) -> usize;
@@ -43,27 +43,7 @@ impl<T: PartialOrd> Bound<T> for [T] {
 }
 
 fn main() {
-    input! {n:usize,k:[i64;n]}
-    let s_total: i64 = k.iter().sum();
-    let s = s_total / 2;
-
-    let mut ans = 0;
-
-    for bit in 0..(1 << n) {
-        let mut total = 0;
-        for i in 0..n {
-            if bit & (1 << i) > 0 {
-                total += k[i];
-            }
-        }
-
-        let a = (s - total).abs();
-        let b = (s - ans).abs();
-        // dbg!(ans, total, s, a, b);
-        if a < b {
-            ans = total;
-        }
-    }
-
-    println!("{}", ans.max(s_total - ans))
+    input! {n:usize,d:usize,s:Chars}
+    let count = s.iter().filter(|&si| *si == '@').count();
+    println!("{}", n - (count - d))
 }
