@@ -43,7 +43,17 @@ impl<T: PartialOrd> Bound<T> for [T] {
 }
 
 fn main() {
-    input! {n:usize,d:usize,s:Chars}
-    let count = s.iter().filter(|&si| *si == '@').count();
-    println!("{}", n - (count - d))
+    input! {_n:usize,d:usize,s:Chars}
+    let mut should_eat = d;
+    let mut ans = vec![];
+    for si in s.iter().rev() {
+        if *si == '@' && should_eat > 0 {
+            ans.push('.');
+            should_eat -= 1;
+        } else {
+            ans.push(*si);
+        }
+    }
+
+    println!("{}", ans.iter().rev().collect::<String>())
 }
