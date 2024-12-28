@@ -1,5 +1,5 @@
 #![allow(dead_code)]
-use proconio::input;
+use proconio::{input, marker::Chars};
 
 trait Bound<T> {
     fn lower_bound(&self, x: &T) -> usize;
@@ -43,20 +43,23 @@ impl<T: PartialOrd> Bound<T> for [T] {
 }
 
 fn main() {
-    input! {a:i32,b:i32,c:i32,d:i32}
-    let mut arr = [a, b, c, d];
-    arr.sort();
+    input! {s:Chars}
+    let mut i = 0;
+    let mut ans = 0;
+    while s.len() > i {
+        if s.len() - 1 == i {
+            ans += 1;
+            break;
+        }
 
-    let have_three =
-        (arr[0] == arr[1] && arr[1] == arr[2]) || (arr[1] == arr[2] && arr[2] == arr[3]);
-
-    let have_double_two = (arr[0] == arr[1]) && arr[2] == arr[3];
-
-    let all_same = arr[0] == arr[1] && arr[1] == arr[2] && arr[2] == arr[3];
-
-    if !all_same && (have_three || have_double_two) {
-        println!("Yes")
-    } else {
-        println!("No")
+        if s[i] == '0' && s[i + 1] == '0' {
+            ans += 1;
+            i += 2;
+        } else {
+            ans += 1;
+            i += 1;
+        }
     }
+
+    println!("{}", ans)
 }
