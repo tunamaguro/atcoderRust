@@ -43,18 +43,20 @@ impl<T: PartialOrd> Bound<T> for [T] {
 }
 
 fn main() {
-    input! {n:usize,m:usize,a:[i32;n],b:[i32;m]}
-    let k = 2 * 100000 + 100;
-    let mut id = vec![-1; k];
-    let mut r = k;
-    for (i, ai) in a.iter().enumerate() {
-        while r as i32 > *ai {
-            r -= 1;
-            id[r] = i as i32 + 1;
-        }
-    }
-    for bi in b {
-        let bi = bi as usize;
-        println!("{}", id[bi])
+    input! {a:i32,b:i32,c:i32,d:i32}
+    let mut arr = [a, b, c, d];
+    arr.sort();
+
+    let have_three =
+        (arr[0] == arr[1] && arr[1] == arr[2]) || (arr[1] == arr[2] && arr[2] == arr[3]);
+
+    let have_double_two = (arr[0] == arr[1]) && arr[2] == arr[3];
+
+    let all_same = arr[0] == arr[1] && arr[1] == arr[2] && arr[2] == arr[3];
+
+    if !all_same && (have_three || have_double_two) {
+        println!("Yes")
+    } else {
+        println!("No")
     }
 }
