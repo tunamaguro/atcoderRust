@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 
-use proconio::input;
+use proconio::{input, marker::Chars};
 
 trait Bound<T> {
     fn lower_bound(&self, x: &T) -> usize;
@@ -43,41 +43,49 @@ impl<T: PartialOrd> Bound<T> for [T] {
     }
 }
 
-fn func(a: &[usize], c: usize, current_xor: usize, ans: &mut usize) {
-    // c = 0(残り選択数が 0) ならば、最大値を更新して戻る
-    if c == 0 {
-        *ans = current_xor.max(*ans);
-        return;
-    }
-    // idx が配列の長さに達したら探索を終了
-    if a.is_empty() {
-        return;
-    }
-    if let Some((first, rest)) = a.split_first() {
-        // A[idx] を使う場合
-        func(rest, c - 1, current_xor ^ first, ans);
-        // A[idx] を使わない場合
-        func(rest, c, current_xor, ans);
-    }
-}
-
 fn main() {
-    input! {n:usize,k:usize,a:[usize;n]}
+    input! {k:usize,s:Chars,t:Chars}
 
-    let mut ans = 0;
-
-    if k <= n - k {
-        func(&a, k, 0, &mut ans);
-    } else {
-        let mut all_xor = 0;
-        for &val in &a {
-            all_xor ^= val;
-        }
-        // XORは可逆性があるので、xorを取り直すと元の値に戻る
-        // a xor b = c
-        // c xor b = a
-        func(&a, n - k, all_xor, &mut ans);
+    if (s.len() as i32 - t.len() as i32).abs() > k as i32 {
+        println!("No");
+        return;
     }
 
-    println!("{}", ans)
+    let s_length = s.len();
+    let t_length = t.len();
+
+    let mut dp = vec![vec![usize::MAX; 2 * k + 1]; s_length + 1];
+
+    dp[0][k] = 0;
+
+    for i in 0..=s.len() {
+        for dj in 0..=(2 * k) {
+            let j = i as i32 + dj as i32 - k as i32;
+            if j < 0 {
+                continue;
+            }
+            let j = j as usize;
+            if j > t_length {
+                break;
+            }
+
+            if i > 0 && dj < 2 * k {
+                dp[i][dj] = dp[i][dj].min(dp[i - 1][dj + 1] + 1)
+            }
+            if j > 0 && dj > 0 {
+                dp[i][dj] = dp[i][dj].min(dp[i][dj - 1] + 1)
+            }
+
+            if i > 0 && j > 0 {
+                let add = if s[i - 1] == t[j - 1] { 0 } else { 1 };
+                dp[i][dj] = dp[i][dj].min(dp[i - 1][dj] + add)
+            }
+        }
+    }
+
+    if dp[s_length][k + t_length - s_length] <= k {
+        println!("Yes")
+    } else {
+        println!("No")
+    }
 }
